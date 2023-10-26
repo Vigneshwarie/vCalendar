@@ -5,6 +5,7 @@
 var mainDiv = $("#mainDiv");
 
 var currDate = dayjs();
+var currDay = currDate.format('MMDYYYY');
 $('#currentDay').text(currDate.format('MMM D, YYYY'));
 
 var currHour = dayjs().hour();
@@ -20,7 +21,6 @@ var pastClass = "row time-block past";
 var presentClass = "row time-block present";
 var futureClass = "row time-block future";
   
-//dayjs().minute() // gets current minute
 
 for (var i = 9; i <= 17; i++){
   if ( i>= 9 && i < 12) {
@@ -62,7 +62,7 @@ for (var i = 9; i <= 17; i++){
   
     $("#hour-" + i + "").append(
       $("<textarea>", {
-        text: "",
+        text: localStorage.getItem(currDay+"textarea-"+i),
         class: "col-8 col-md-10 description",
         rows: "3",
         id: "textarea-" + i
@@ -81,11 +81,13 @@ for (var i = 9; i <= 17; i++){
       }));
 }
 
+//https://stackoverflow.com/questions/21064724/jquery-get-id-value-from-dynamically-created-div
 
 $(document).ready(function () {
   $('button[id^="button-"]').on('click', function() {  
     var idNo = this.id.split("-");
     txtKey = "textarea-" + idNo[1];
+    console.log(txtKey);
     txtValue = $("#"+txtKey).val();
     if (txtValue.length > 0) {
       saveEventDescription(txtKey, txtValue);
@@ -97,9 +99,12 @@ $(document).ready(function () {
 });
 
 function saveEventDescription(key, value) { 
+  // Changing the value to uniquely identify the task according to the date.
+  key = currDay + key;
   localStorage.setItem(key, value);
 }
-  // all the click events should go inside this. 
+
+
 
 
 // TODO: Add a listener for click events on the save button. This code should
