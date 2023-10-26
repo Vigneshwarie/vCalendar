@@ -10,7 +10,7 @@ N/A
 
 ## Usage
 
-To access the webpage, use the below link to access https://vigneshwarie.github.io/JS-Quizlathon/
+To access the webpage, use the below link to access https://vigneshwarie.github.io/vCalendar/
 
 The application source code can be accessed here https://github.com/Vigneshwarie/vCalendar
 
