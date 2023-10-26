@@ -7,12 +7,14 @@ var mainDiv = $("#mainDiv");
 var currDate = dayjs();
 $('#currentDay').text(currDate.format('MMM D, YYYY'));
 
-
 var currHour = dayjs().hour();
 var currMins = dayjs().minute();
 console.log(currHour + " == " + currMins);
 var time;
 var timetheme;
+var displayTime;
+var txtKey;
+var txtValue;
 
 var pastClass = "row time-block past";
 var presentClass = "row time-block present";
@@ -20,11 +22,18 @@ var futureClass = "row time-block future";
   
 //dayjs().minute() // gets current minute
 
-for (i = 9; i <= 17; i++){
+for (var i = 9; i <= 17; i++){
   if ( i>= 9 && i < 12) {
     time = " AM";
+    displayTime = i;
   }
   else {
+    if (i === 12) {
+      displayTime = i;
+    }
+    else {
+      displayTime = i - 12;
+    }
     time = " PM";
   }
 
@@ -44,49 +53,56 @@ for (i = 9; i <= 17; i++){
       class: timetheme,
     }));
   
-  $("#hour-" + i + "").append(
-    $("<div>", {
-      text: i + time,
-      class: "col-2 col-md-1 hour text-center py-3",
-      id: "time-" + i
-    }));
+    $("#hour-" + i + "").append(
+      $("<div>", {
+        text: displayTime + time,
+        class: "col-2 col-md-1 hour text-center py-3",
+        id: "time-" + i
+      }));
   
-  $("#hour-" + i + "").append(
-    $("<textarea>", {
-      text: "",
-      class: "col-8 col-md-10 description",
-      rows: "3",
-      id: "textarea-" + i
-    }));
+    $("#hour-" + i + "").append(
+      $("<textarea>", {
+        text: "",
+        class: "col-8 col-md-10 description",
+        rows: "3",
+        id: "textarea-" + i
+      }));
   
-  $("#hour-" + i + "").append(
-    $("<button>", {
-      class: "btn saveBtn col-2 col-md-1",
-      "aria-label": "save"
-    }).append($("<i/>"), {
-      class: "fas fa-save",
-      "aria-hidden":"true"
-    }));
+    $("#hour-" + i + "").append(
+      $("<button>", {
+        class: "btn saveBtn col-2 col-md-1",
+        "aria-label": "save",
+        id: "button-" + i
+      }));
+  
+    $("#button-" + i + "").append($("<i>", {
+        class: "fas fa-save",
+        "aria-hidden":"true"
+      }));
 }
 
 
-
-
-
-
-
-
-
-
-
 $(document).ready(function () {
-  
+  $('button[id^="button-"]').on('click', function() {  
+    var idNo = this.id.split("-");
+    txtKey = "textarea-" + idNo[1];
+    txtValue = $("#"+txtKey).val();
+    if (txtValue.length > 0) {
+      saveEventDescription(txtKey, txtValue);
+    }
+    else { 
+      console.log("No values");
+    }
+  });
+});
 
+function saveEventDescription(key, value) { 
+  localStorage.setItem(key, value);
+}
   // all the click events should go inside this. 
-})
 
-$(function () {
-  // TODO: Add a listener for click events on the save button. This code should
+
+// TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
   // local storage. HINT: What does `this` reference in the click listener
   // function? How can DOM traversal be used to get the "hour-x" id of the
@@ -104,4 +120,3 @@ $(function () {
   // attribute of each time-block be used to do this?
   //
   // TODO: Add code to display the current date in the header of the page.
-});
